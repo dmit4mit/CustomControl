@@ -14,8 +14,8 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="36dp"
+        android:layout_marginTop="68dp"
         android:layout_marginEnd="36dp"
-        android:layout_marginTop="220dp"
         android:max="10"
         android:progress="3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,47 +23,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/discreteSeekBar" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintEnd_toEndOf="@+id/seekBar"
+        tools:text="Progress" />
 
     <TextView
         android:id="@+id/discreteBarViewProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/discreteSeekBar"
         app:layout_constraintEnd_toEndOf="@+id/discreteSeekBar"
         tools:text="Progress" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Progress"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintEnd_toEndOf="@+id/seekBar" />
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/discreteSeekBar" />
 
     <com.android.customcontrol.CustomController
-        android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_width="259dp"
+        android:layout_height="234dp"
 
-        app:radius="10"
-
-        android:layout_marginTop="100dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="20dp"
+        android:max="100"
+        android:min="0"
 
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        app:layout_constraintVertical_bias="0.189"
+        app:start_angle="180"
+        app:sweep_angle="230" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

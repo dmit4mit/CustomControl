@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CustomController">
-        <attr name="radius" format="integer"/>
+        <attr name="sweep_angle" format="integer"/>
+        <attr name="start_angle" format="integer"/>
     </declare-styleable>
 </resources>
