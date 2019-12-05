@@ -107,10 +107,11 @@ class CustomController @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         val currentProgressAngleFromStart = (progress / max.toFloat()) * sweepAngle
+
         canvas?.drawArc(oval, startAngle.toFloat(), sweepAngle.toFloat(), false, progressPaint)
         canvas?.drawArc(oval, startAngle.toFloat(), currentProgressAngleFromStart, false, progressFillPaint)
         canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), 5F, progressPaint)
-        val pos = getPosAtAngle(currentProgressAngleFromStart)
+        val pos = getPosAtAngle(currentProgressAngleFromStart + startAngle)
         drawThumb(canvas, pos)
         invalidate()
     }
@@ -118,17 +119,18 @@ class CustomController @JvmOverloads constructor(
     private fun getAngleDegAtPosition(x: Float, y: Float) : Float {
         var angle = 0.0
 
-        if (x >= center.x && y >= center.y) {
-            angle = acos((x - center.x) / arcRadius.toDouble())
 
-        } else if (x < center.x && y >= center.y) {
-            angle = Math.PI / 2 + acos((y - center.y) / arcRadius.toDouble())
+        if (x > center.x && y > center.y) {
+            angle = atan((y - center.y) / (x - center.x)).toDouble()
+
+        } else if (x <= center.x && y > center.y) {
+            angle = Math.PI / 2 + atan((center.x - x) / (y - center.y))
 
         } else if (x < center.x && y < center.y) {
-            angle = Math.PI + acos((center.x - x) / arcRadius.toDouble())
+            angle = Math.PI + atan((center.y - y) / (center.x - x))
 
         } else if (x >= center.x && y < center.y) {
-            angle = Math.PI * 3/2 + acos((center.y - y) / arcRadius.toDouble())
+            angle = Math.PI * 3/2 + atan((x - center.x) / (center.y - y))
         }
 
         return Math.toDegrees(angle).toFloat()
@@ -144,20 +146,20 @@ class CustomController @JvmOverloads constructor(
                 pos.y = (center.y + arcRadius * sin(angleRad)).toInt()
             }
 
-            in 90f..180f -> {
+            in 91f..180f -> {
                 val betta = angleRad - Math.PI / 2
                 pos.x = (center.x - arcRadius * sin(betta)).toInt()
                 pos.y = (center.y + arcRadius * cos(betta)).toInt()
             }
 
             in 181f..270f -> {
-                val betta = angle.rem(360) - Math.PI
-                pos.x = (center.x - arcRadius * cos(30.0)).toInt()
-                pos.y = (center.y - arcRadius * sin(30.0)).toInt()
+                val betta = angleRad - Math.PI
+                pos.x = (center.x - arcRadius * cos(betta)).toInt()
+                pos.y = (center.y - arcRadius * sin(betta)).toInt()
             }
 
             in 271f..359f -> {
-                val betta = angleRad - Math.PI
+                val betta = angleRad + Math.PI / 2
                 pos.x = (center.x + arcRadius * sin(betta)).toInt()
                 pos.y = (center.y - arcRadius * cos(betta)).toInt()
             }
