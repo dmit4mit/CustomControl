@@ -54,21 +54,34 @@
         app:layout_constraintTop_toBottomOf="@+id/discreteSeekBar" />
 
     <com.android.customcontrol.CustomController
+        android:id="@+id/customController"
         android:layout_width="259dp"
-        android:layout_height="234dp"
 
+        android:layout_height="234dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="20dp"
         android:max="100"
-        android:min="0"
+        android:progress="50"
 
+        android:min="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/seekBar"
         app:layout_constraintVertical_bias="0.189"
-        app:start_angle="180"
-        app:sweep_angle="230" />
+        app:start_angle="40"
+        app:sweep_angle="250" />
+
+    <TextView
+        android:id="@+id/progress_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customController" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

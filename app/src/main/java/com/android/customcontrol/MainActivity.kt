@@ -25,7 +25,16 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        customController.onProgressChangedListener = object : CustomController.onProgressListener {
+            override fun onProgressChanged(progress: Float) {
+                progress_tv.text = progress.toString()
+            }
+
+        }
     }
+
+
 
 
 }
