@@ -3,5 +3,14 @@
     <declare-styleable name="CustomController">
         <attr name="sweep_angle" format="integer"/>
         <attr name="start_angle" format="integer"/>
+        <attr name="stroke_base_width" format="float"/>
+        <attr name="stroke_fill_width" format="float"/>
+        <attr name="offset" format="float"/>
+        <attr name="base_color" format="integer"/>
+        <attr name="fill_color" format="integer"/>
+        <attr name="use_smooth" format="boolean"/>
+        <attr name="thumb" format="reference"/>
+        <attr name="text_color" format="integer"/>
+        <attr name="text_size" format="float"/>
     </declare-styleable>
 </resources>
