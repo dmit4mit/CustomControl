@@ -12,5 +12,6 @@
         <attr name="thumb" format="reference"/>
         <attr name="text_color" format="integer"/>
         <attr name="text_size" format="float"/>
+        <attr name="running_bar" format="boolean"/>
     </declare-styleable>
 </resources>

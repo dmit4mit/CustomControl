@@ -22,13 +22,22 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switcher"
+        app:offset="30"
         app:start_angle="50"
-        app:sweep_angle="260"
         app:stroke_base_width="100"
         app:stroke_fill_width="90"
-        app:text_size="250"
-        app:offset="30"
-        />
+        app:sweep_angle="260"
+        app:text_size="250" />
+
+    <Switch
+        android:id="@+id/switcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Running bar "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

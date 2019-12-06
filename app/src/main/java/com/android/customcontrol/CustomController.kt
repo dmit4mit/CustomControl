@@ -4,6 +4,9 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.SeekBar
 import java.lang.Integer.min
 import kotlin.math.*
@@ -18,7 +21,7 @@ class CustomController @JvmOverloads constructor(
 ) : SeekBar(context, attributeSet, defStyle) {
 
     interface OnProgressListener {
-        fun onProgressChanged(progress: Float)
+        fun onProgressChanged(progress: Int)
     }
 
     companion object {
@@ -55,6 +58,7 @@ class CustomController @JvmOverloads constructor(
     private var useSmooth = a.retrieveAttrOrDefault(true) {getBoolean(R.styleable.CustomController_use_smooth, it)}
     private var textColor = a.retrieveAttrOrDefault(Color.BLACK) {getInteger(R.styleable.CustomController_text_color, it)}
     private val textSize = a.retrieveAttrOrDefault(200f) {getFloat(R.styleable.CustomController_text_size, it)}
+    var isRunningBar = a.retrieveAttrOrDefault(false) {getBoolean(R.styleable.CustomController_running_bar, it)}
 
     private var progressPaint: Paint = createBasePaint(baseColor, strokeBaseWidth)
     private var progressFillPaint: Paint = createBasePaint(progressFillColor, strokeFillWidth)
@@ -65,7 +69,8 @@ class CustomController @JvmOverloads constructor(
         textSize = this@CustomController.textSize
     }
 
-    private var progressForThumb = progress.toFloat()
+    private var oldProgress = progress
+    var smoothProgress = progress.toFloat()
         get() = if (useSmooth) field else progress.toFloat()
     private var oval = RectF()
     private val stopAngle get() = startAngle + sweepAngle
@@ -73,9 +78,11 @@ class CustomController @JvmOverloads constructor(
     private var thumbRadius = 0
     private var isDrugging = false
     private var center = Point()
+    private var thumbDrawable = a?.getDrawable(R.styleable.CustomController_thumb) ?: resources.getDrawable(R.drawable.ic_crying, null)
+    private var winThumbDrawable = resources.getDrawable(R.drawable.ic_happy, null)
 
     init {
-        thumb = a?.getDrawable(R.styleable.CustomController_thumb) ?: resources.getDrawable(R.drawable.ic_happy, null)
+        thumb = thumbDrawable
         thumbRadius = DEFAULT_STROKE_BASE_WIDTH.toInt()
         offset += thumbRadius
         a?.recycle()
@@ -97,11 +104,9 @@ class CustomController @JvmOverloads constructor(
 
     private fun updateOnTouch(event: MotionEvent) {
         val touchAngle = getAngleDegAtPosition(event.x, event.y).toInt()
-        var isTouchInBarArea = false
+        val isTouchInBarArea = (touchAngle in (startAngle..stopAngle)
+                || (stopAngle.rem(360) in (touchAngle + 1)..startAngle))
 
-        if (touchAngle in (startAngle..stopAngle) || (stopAngle.rem(360) in (touchAngle + 1)..startAngle)) {
-            isTouchInBarArea = true
-        }
         if (isDrugging && (progress == 0 && touchAngle !in startAngle..startAngle + 5
                     || progress == max  && touchAngle !in stopAngle.rem(360) - 5..stopAngle.rem(360))) {
             return
@@ -113,21 +118,15 @@ class CustomController @JvmOverloads constructor(
 
             var progressAngleFromStart = touchAngle - startAngle
             if (touchAngle < startAngle) progressAngleFromStart += 360
-
             val progressRatio = progressAngleFromStart / sweepAngle.toFloat()
-
             val newProgress = (progressRatio * max)
-//            if (isDrugging && (progress == 0 && newProgress.toInt() != 1 || progress == max  && newProgress.toInt() != max - 1)) {
-//                return
-//            }
-            progress = round(newProgress).toInt()
-            progressForThumb = newProgress
-            onProgressChangedListener?.onProgressChanged(progress.toFloat())
+            applyNewProgress(round(newProgress).toInt())
+            smoothProgress = newProgress
         }
     }
 
     override fun onDraw(canvas: Canvas?) {
-        val currentProgressAngleFromStart = (progressForThumb / max.toFloat()) * sweepAngle
+        val currentProgressAngleFromStart = (smoothProgress / max.toFloat()) * sweepAngle
 
         canvas?.drawArc(oval, startAngle.toFloat(), sweepAngle.toFloat(), false, progressPaint)
         canvas?.drawArc(oval, startAngle.toFloat(), currentProgressAngleFromStart, false, progressFillPaint)
@@ -189,6 +188,23 @@ class CustomController @JvmOverloads constructor(
         return pos
     }
 
+    private fun applyNewProgress(newProgress: Int) {
+        if (isRunningBar) {
+            var plusRotation = 1.2f
+            if (newProgress > max * 0.5) plusRotation = 2f
+            if (newProgress > max * 0.7) plusRotation = 5f
+            if (newProgress > max * 0.85) plusRotation = 9f
+
+            if (newProgress > progress) rotation += plusRotation
+        }
+        progress = newProgress
+        onProgressChangedListener?.onProgressChanged(progress)
+        if (progress == max) {
+            thumb = winThumbDrawable
+        }
+        invalidate()
+    }
+
     private fun drawThumb(canvas: Canvas?, pos: DPoint) {
         thumb.setBounds(pos.x.toInt() - strokeBaseWidth.toInt(), pos.y.toInt() - strokeBaseWidth.toInt(),
             pos.x.toInt() + strokeBaseWidth.toInt(), pos.y.toInt() + strokeBaseWidth.toInt())
@@ -204,6 +220,7 @@ class CustomController @JvmOverloads constructor(
 
         applySizeDependentStyles()
     }
+
 
     private fun createBasePaint(color: Int, strokeWidth: Float) = Paint().apply {
         isAntiAlias = true
